@@ -1,0 +1,12 @@
+.m78-grids {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  border: 1px solid pink;
+}
+
+.m78-grids_col {
+  box-sizing: border-box;
+  border: 1px solid red;
+}
