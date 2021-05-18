@@ -2,6 +2,7 @@ import {
   _MediaQueryTypeContext,
   _Size,
   MediaQueryMeta,
+  MediaQueryObject,
   MediaQueryTypeKeys,
   MediaQueryTypeValues,
 } from '../types';
@@ -73,4 +74,61 @@ export function onChangeHandle(
   if (isArray(changeListeners)) {
     changeListeners.forEach(fn => fn(full));
   }
+}
+
+const mediaQueryGetterDefaultChecker = (item: any) => item !== undefined;
+
+/**
+ * 根据 { [MediaQueryTypeKeys]: T } 格式的对象获取当前尺寸下符合条件的值
+ * @param meta - 媒体查询源信息
+ * @param mq - 包含MediaQueryTypeKeys配置的对象
+ * @param fullback - 没有任何匹配的回退值
+ * @param checker - 自定义T是否生效，默认检测其是否为undefined
+ * @return t - 满足当前媒体条件的值
+ * */
+export function mediaQueryGetter<T>(
+  meta: MediaQueryMeta,
+  mq: MediaQueryObject<T>,
+  fullback: T,
+  checker?: (item?: T) => boolean,
+) {
+  let val: T | undefined;
+
+  const _checker = checker || mediaQueryGetterDefaultChecker;
+
+  /** 从列表中获取首个包含正确值的value */
+  const getFirst = (cLs: (T | undefined)[]) => cLs.find(_checker);
+
+  /** 取值顺序 */
+  const ls = [mq.xxl, mq.xl, mq.lg, mq.md, mq.sm, mq.xs];
+
+  if (meta.isXXL()) {
+    val = getFirst(ls);
+  }
+
+  if (meta.isXL()) {
+    val = getFirst(ls.slice(1));
+  }
+
+  if (meta.isLG()) {
+    val = getFirst(ls.slice(2));
+  }
+
+  if (meta.isMD()) {
+    val = getFirst(ls.slice(3));
+  }
+
+  if (meta.isSM()) {
+    val = getFirst(ls.slice(4));
+  }
+
+  if (meta.isXS()) {
+    val = getFirst(ls.slice(5));
+  }
+
+  if (!_checker(val)) {
+    val = fullback;
+  }
+
+  return val as T;
 }

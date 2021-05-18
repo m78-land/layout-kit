@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode } from 'react';
+import { CSSProperties, ReactElement, ReactNode } from 'react';
 
 /*
  * ########################################
@@ -9,6 +9,12 @@ import { ReactElement, ReactNode } from 'react';
 export interface _Size {
   width: number;
   height: number;
+}
+
+export interface _Base {
+  className?: string;
+  style?: CSSProperties;
+  [key: string]: any;
 }
 
 /**
@@ -86,6 +92,16 @@ export interface MediaQueryMeta {
   isLarge: () => boolean;
 }
 
+/** 一个以MediaQueryTypeKeys为键，泛型参数为值的对象 */
+export interface MediaQueryObject<T = any> {
+  xs?: T;
+  sm?: T;
+  md?: T;
+  lg?: T;
+  xl?: T;
+  xxl?: T;
+}
+
 export interface MediaQueryProps extends MediaQueryConf {
   children: (meta: MediaQueryMeta) => ReactElement<any, any> | null;
 }
@@ -100,7 +116,7 @@ export interface MediaQueryListenerProps {
  * ########################################
  * */
 
-export interface GridRowProps {
+export interface GridRowProps extends _Base {
   /** 'start' | 主轴对齐方式 */
   mainAlign?: 'center' | 'start' | 'end' | 'around' | 'between' | 'evenly';
   /** 'start' | 交叉轴对齐方式 */
@@ -111,20 +127,16 @@ export interface GridRowProps {
   gutter?: [number, number] | number;
   /** true | 是否允许换行 */
   wrap?: boolean;
+  /** 12 | 栅格数量 */
+  maxColumn?: number;
 }
 
-export interface GridColProps {
-  /** 内容 */
-  children?: ReactNode;
+/**
+ * GridCol的媒体查询配置
+ * */
+export interface GridColMediaQueryProps {
   /** 占用栅格列数 */
   col?: number;
-  /** 设置指定尺寸屏幕下的col, 会覆盖col设置 */
-  xs?: number;
-  sm?: number;
-  md?: number;
-  lg?: number;
-  xl?: number;
-  xxl?: number;
   /** 左侧间隔列 */
   offset?: number;
   /** 向左移动指定列 */
@@ -135,6 +147,22 @@ export interface GridColProps {
   order?: number;
   /** 手动指定该列的flex值 */
   flex?: string | number;
-  /** 指定尺寸下隐藏 */
-  hidden?: MediaQueryTypeKeys | MediaQueryTypeValues;
+  /** 是否隐藏 */
+  hidden?: boolean;
+}
+
+/** 表示列数或一个GridColMediaQueryProps配置 */
+export type GridColNumberOrMediaQueryProps = number | GridColMediaQueryProps;
+
+export interface GridColProps extends GridColMediaQueryProps, _Base {
+  /** 内容 */
+  children?: ReactNode;
+  /** 处于特定媒体类型下的配置 */
+  xs?: GridColNumberOrMediaQueryProps;
+  sm?: GridColNumberOrMediaQueryProps;
+  md?: GridColNumberOrMediaQueryProps;
+  lg?: GridColNumberOrMediaQueryProps;
+  xl?: GridColNumberOrMediaQueryProps;
+  xxl?: GridColNumberOrMediaQueryProps;
+  align?: 'stretch' | 'start' | 'end' | 'center';
 }
