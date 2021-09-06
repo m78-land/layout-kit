@@ -17,10 +17,9 @@ import { getCurrentMqProps } from './common';
 const MAX_COLUMN = 12;
 const ONE_COLUMN = 100 / MAX_COLUMN;
 
-const getStyleValue = (n?: number, negative = false) => {
+const getStyleValue = (n?: number) => {
   if (isNumber(n)) {
-    const calc = n * ONE_COLUMN;
-    return `${negative ? -calc : calc}%`;
+    return `${n * ONE_COLUMN}%`;
   }
   return undefined;
 };
@@ -40,7 +39,7 @@ function GridItem(props: GridColProps) {
   if (!mqMeta) return null;
 
   const current = getCurrentMqProps(mqMeta, props);
-  const { col, offset, push, pull, order, flex, hidden } = current;
+  const { col, offset, move, order, flex, hidden } = current;
 
   console.log(current, mqMeta.type);
 
@@ -50,8 +49,8 @@ function GridItem(props: GridColProps) {
       style={{
         width: getStyleValue(col),
         marginLeft: getStyleValue(offset),
-        left: getStyleValue(pull, true) || getStyleValue(push),
-        order: order,
+        left: getStyleValue(move),
+        order,
         flex,
         display: hidden ? 'none' : undefined,
       }}

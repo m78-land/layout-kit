@@ -1,4 +1,4 @@
-import { CSSProperties, ReactElement, ReactNode } from 'react';
+import React, { CSSProperties, ReactElement, ReactNode } from 'react';
 
 /*
  * ########################################
@@ -112,23 +112,30 @@ export interface MediaQueryListenerProps {
 
 /*
  * ########################################
- * 栅格系统
+ * Flex
  * ########################################
  * */
-
-export interface GridRowProps extends _Base {
+interface FlexWrapProps extends _Base {
   /** 'start' | 主轴对齐方式 */
   mainAlign?: 'center' | 'start' | 'end' | 'around' | 'between' | 'evenly';
   /** 'start' | 交叉轴对齐方式 */
   crossAlign?: 'stretch' | 'start' | 'end' | 'center';
-  /** 内容，一般是一组GridCol */
-  children?: ReactNode;
+  /** 内容 */
+  children: React.ReactNode;
+}
+
+
+/*
+ * ########################################
+ * 栅格系统
+ * ########################################
+ * */
+
+export interface GridRowProps extends FlexWrapProps {
   /** 间隔，支持响应式设置 */
   gutter?: [number, number] | number;
   /** true | 是否允许换行 */
   wrap?: boolean;
-  /** 12 | 栅格数量 */
-  maxColumn?: number;
 }
 
 /**
@@ -139,10 +146,8 @@ export interface GridColMediaQueryProps {
   col?: number;
   /** 左侧间隔列 */
   offset?: number;
-  /** 向左移动指定列 */
-  pull?: number;
-  /** 向右移动指定列 */
-  push?: number;
+  /** 向左或向右移动指定列，不会影响原有文档流 */
+  move?: number;
   /** 控制顺序 */
   order?: number;
   /** 手动指定该列的flex值 */

@@ -19,7 +19,7 @@ import { isNumber, isObject, isTruthyOrZero } from '@lxjx/utils';
  * */
 export function getCurrentMqProps(
   mqMeta: MediaQueryMeta,
-  { col, offset, pull, push, order, flex, hidden, xs, sm, md, lg, xl, xxl }: GridColProps,
+  { col, offset, move, order, flex, hidden, xs, sm, md, lg, xl, xxl }: GridColProps,
 ) {
   const mqObject: MediaQueryObject<GridColNumberOrMediaQueryProps> = {
     xs,
@@ -38,17 +38,11 @@ export function getCurrentMqProps(
       offset,
       item => !isNumber(item) && isNumber(item?.offset),
     ),
-    pull: mediaQueryGetter(
+    move: mediaQueryGetter(
       mqMeta!,
       mqObject,
-      pull,
-      item => !isNumber(item) && isNumber(item?.pull),
-    ),
-    push: mediaQueryGetter(
-      mqMeta!,
-      mqObject,
-      push,
-      item => !isNumber(item) && isNumber(item?.push),
+      move,
+      item => !isNumber(item) && isNumber(item?.move),
     ),
     order: mediaQueryGetter(
       mqMeta!,
@@ -69,8 +63,6 @@ export function getCurrentMqProps(
       item => !isNumber(item) && item?.hidden,
     ),
   };
-
-  console.log(obj, offset, pull, push);
 
   const gridColMediaQueryProps: any = {};
 
